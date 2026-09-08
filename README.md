@@ -1,42 +1,33 @@
-# Fake AP / Rogue Access Point Lab
+# Wireless Audit Lab: Wifiphisher
 
-A repository documenting the implementation and testing of rogue access point (Fake Wi-Fi) techniques on Kali Linux for educational and security research purposes.
+A security research repository documenting the deployment, mechanics, and defensive analysis of automated rogue access point scenarios using **Wifiphisher** on Kali Linux.
 
-> ⚠️ **Disclaimer**: This project is intended strictly for educational purposes, security research, and authorized penetration testing on network infrastructure you own or have explicit permission to audit. Misuse of these tools is illegal under local, federal, and international cybercrime laws.
+> ⚠️ **Disclaimer**: This tool and repository are strictly intended for educational purposes, security awareness, and authorized wireless penetration testing on networks you own or have explicit written permission to audit. Any unauthorized deployment against public or third-party networks is strictly illegal under applicable cybercrime legislation.
 
 ---
 
 ## 📋 Overview
 
-This repository demonstrates the setup of a captive portal / rogue AP using Kali Linux. It illustrates how clients automatically reconnect to known Wi-Fi SSIDs and highlights vulnerabilities in unencrypted or improperly configured wireless networks.
+[Wifiphisher](https://github.com/wifiphisher/wifiphisher) is a rogue access point framework that automates social engineering and man-in-the-middle (MITM) attacks against Wi-Fi networks. 
 
-### Features
-- **Monitored Wireless Interface**: Configuration of wireless cards in monitor mode.
-- **Rogue AP Deployment**: Broadcasting custom or target SSIDs.
-- **Captive Portal Integration**: Lightweight web server to simulate network authentication screens.
-- **Traffic Interception**: Basic DHCP/DNS routing for client redirection.
+This lab documentation details how Wifiphisher achieves client redirection using targeted deauthentication, automated DHCP/DNS routing, and customized phishing scenarios.
 
----
-
-## 🛠️ Prerequisites & Hardware
-
-### Requirements
-- **OS**: Kali Linux 2024.x or later
-- **Hardware**: External USB Wireless Adapter supporting **Monitor Mode** and **Packet Injection** (e.g., Alfa AWUS036ACH, TP-Link TL-WN722N v1, or Atheros AR9271). currently using for this lab MediaTek "MT7612U"
-- **Dependencies**: `aircrack-ng`, `hostapd`, `dnsmasq`, `lighttpd` / `apache2`.
+### Core Attack Mechanics
+1. **Targeted Deauthentication**: Forces target clients off their legitimate access point using forged deauth packets.
+2. **Rogue AP Association**: Spawns a twin AP broadcasting the target SSID to lure reauthenticating clients.
+3. **Phishing & Captive Portal**: Serves victim devices tailored web pages (e.g., firmware updates, Wi-Fi password prompts, or OAuth login pages).
 
 ---
 
-## 🚀 Quick Start Guide
+## 🛠️ Hardware & Prerequisites
 
-### 1. Identify and Enable Monitor Mode
-Find your wireless network interface and set it to monitor mode:
+### Required Hardware
+* **Operating System**: Kali Linux 2024.x+
+* **Wireless Adapters**: 
+  * **Primary Adapter**: Supporting **Monitor Mode** and **Packet Injection** (e.g., Alfa AWUS036ACH, Atheros AR9271). currently using for this lab MediaTek "MT7612U"
+  * **Secondary Adapter** *(Recommended)*: An additional interface for internet forwarding/bridging.
 
+### Required Software Packages
 ```bash
-# List available network interfaces
-iwconfig
-
-# Put the wireless interface into monitor mode
-sudo ip link set wlan0 down
-sudo iw dev wlan0 set type monitor
-sudo ip link set wlan0 up
+sudo apt update
+sudo apt install -y wifiphisher python3-pip hostapd dnsmasq
